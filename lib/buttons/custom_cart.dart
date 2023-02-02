@@ -25,7 +25,7 @@ class CustomCard extends StatelessWidget {
           Icon(
             icon,
             size: 20,
-            color: Colors.indigo,
+            color: Colors.blue,
           ),
           const SizedBox(width: 8),
           Text(text, style: AppTextStyle.cardTextStyles),

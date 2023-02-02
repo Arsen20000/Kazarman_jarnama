@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../view/advert_view.dart';
+import '../view/main_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AdvertView(),
+      home: const MainView(),
     );
   }
 }

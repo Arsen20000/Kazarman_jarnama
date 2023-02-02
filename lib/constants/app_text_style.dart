@@ -14,7 +14,7 @@ class AppTextStyle {
   static const TextStyle drawerTextStyle =
       TextStyle(fontSize: 20, color: Colors.white);
   static const TextStyle cardTextStyles =
-      TextStyle(fontSize: 20, color: Color.fromARGB(255, 255, 254, 254));
+      TextStyle(fontSize: 20, color: Color.fromARGB(255, 0, 181, 247));
   static const TextStyle mediaTextStyle =
       TextStyle(fontSize: 30, color: Color.fromARGB(255, 255, 254, 254));
   static const TextStyle versioTextStyle =
