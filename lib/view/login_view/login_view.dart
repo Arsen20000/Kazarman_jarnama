@@ -26,19 +26,13 @@ class _LoginViewState extends State<LoginView> {
               Text('Бул баракчага ким экенинизди айтып катоодон отунуз керек болот!', 
               style: TextStyle(fontSize: 22, color:Colors.blue),),
               SizedBox(height: 24),
-              CustomTextField(
-                // controller: controller.email,
-                labelText: 'Email',
-                hinText: 'Enter your Email',
-              ),
-               SizedBox(
-                height: 14,
-              ),
-              CustomTextField(
-                // controller: controller.password,
-                labelText: 'Password',
-                hinText: 'Enter your Password',
-              ),
+              // CustomTextField(),
+               SizedBox(height: 14 ),
+              // CustomTextField(
+              //   // controller: controller.password,
+              //   labelText: 'Password',
+              //   hinText: 'Enter your Password',
+              // ),
             ],
           ),
           const SizedBox(

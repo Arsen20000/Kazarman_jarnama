@@ -4,11 +4,11 @@ class AppTextStyle {
   static const TextStyle appBarTextStyles =
       TextStyle(fontSize: 22, color: Color.fromARGB(255, 250, 251, 250));
       static const TextStyle titleStyle =
-      TextStyle(fontSize: 20,);
+      TextStyle(fontSize: 15,);
       static const TextStyle priceStyle =
-      TextStyle(fontSize: 18,);
-       static const TextStyle dataStyle =
       TextStyle(fontSize: 10,);
+       static const TextStyle dataStyle =
+      TextStyle(fontSize: 8,);
       static const TextStyle appBarTextStyle =
       TextStyle(fontSize: 22, color: Color.fromARGB(255, 250, 251, 250));
   static const TextStyle drawerTextStyle =
