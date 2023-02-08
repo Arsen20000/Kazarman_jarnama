@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazarman_jarnama/view/add_advert_view/add_advert_view.dart';
-import 'package:kazarman_jarnama/view/main_view.dart';
-
-import '../../constants/custom_text_field.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

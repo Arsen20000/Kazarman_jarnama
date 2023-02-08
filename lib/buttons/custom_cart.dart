@@ -17,7 +17,7 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor:Colors.cyanAccent, 
-      highlightColor:Color.fromARGB(255, 181, 163, 63),
+      highlightColor:const Color.fromARGB(255, 181, 163, 63),
       onTap: onTap,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

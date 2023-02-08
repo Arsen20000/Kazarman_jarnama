@@ -1,30 +1,38 @@
-
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    Key? key, 
-    this.hinText,
+    Key? key,
+    this.hintText,
     this.labelText,
     this.controller,
+    this.maxLines, 
+    this.onTap,
   }) : super(key: key);
-  final String? hinText;
+
+  final String? hintText;
   final String? labelText;
   final TextEditingController? controller;
+  final int? maxLines;
+  final void Function()? onTap;
+
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      cursorColor:Colors.blue,
+      onTap:onTap,
+      maxLines: maxLines,
+      cursorColor: Colors.blue,
       controller: controller,
-      textAlign:TextAlign.center ,
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
-        hintText:hinText,
-        labelText:labelText ,
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(40),
-      
-    ),
-  ),
+        label: Text(hintText ?? ''),
+        hintText: hintText,
+        labelText: labelText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40),
+        ),
+      ),
     );
   }
 }
