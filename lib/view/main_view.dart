@@ -31,7 +31,8 @@ class _MainViewState extends State<MainView> {
                     ));
               },
               icon: const Icon(Icons.add)),
-        ]),
+        ],),
+        
         drawer: const DrawerDrawer(),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),

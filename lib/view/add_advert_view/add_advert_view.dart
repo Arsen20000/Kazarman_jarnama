@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,6 +20,8 @@ class _AdvertAddViewState extends State<AdvertAddView> {
   final _phone = TextEditingController();
   final _userName = TextEditingController();
   final _address = TextEditingController();
+  List<XFile> images = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,11 +31,16 @@ class _AdvertAddViewState extends State<AdvertAddView> {
         body: ListView(
           padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
           children: [
-            ImageContainer(images: [],),
+            ImageContainer(
+              images: images,
+              onPicked: (value) => images = value,
+              delete: (xfile) => images.remove(xfile),
+            ),
+             const SizedBox(height: 12),
             TexttformField(
               controller: _title,
               hintText: 'title',
-            ), 
+            ),
             const SizedBox(height: 12),
             TexttformField(
               controller: _titleDescription,
@@ -73,14 +79,17 @@ class _AdvertAddViewState extends State<AdvertAddView> {
 
 // ignore: must_be_immutable
 class ImageContainer extends StatefulWidget {
-   ImageContainer({
-   required this.images,
-    
-    super.key,
-  });
+  ImageContainer({
+    Key? key,
+    required this.images,
+    required this.onPicked,
+    required this.delete,
+  }) : super(key: key);
 
-   List<XFile> images;
+  List<XFile> images;
+  final void Function(List<XFile> images) onPicked;
 
+  final void Function(XFile) delete;
   @override
   State<ImageContainer> createState() => _ImageContainerState();
 }
@@ -90,32 +99,112 @@ class _ImageContainerState extends State<ImageContainer> {
 
   @override
   Widget build(BuildContext context) {
-   
     return Container(
         width: double.infinity,
-        height: 300,
+        // height: 300,
         decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(20)),
+            border: Border.all(), borderRadius: BorderRadius.circular(20)),
         child: widget.images.isNotEmpty
-            ? Wrap(
-                children: widget.images.map((e) => Expanded(child: Image.file(File(e.path)))).toList(),
-              )
-            : Center(
-                child: IconButton(  
-                  icon: const Icon(
+            ? SizedBox(
+                height: 300,
+                child: Stack(
+                  children:[
+                     GridView.builder(
+                      gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisExtent: 120,   
+                              ),
+                      itemCount:widget.images.length,
+                      itemBuilder:(BuildContext context, int index) {
+                        return ImageCard(
+                          widget.images[index],
+                          delete: (xfile) {
+                            widget.images.remove(xfile);
+                            widget.delete(xfile);
+                            setState(() {
+                              
+                            });
+                          },
+                        );
+                      }),
+               Positioned(
+                bottom: 4,
+                right: 4,
+                 child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: IconButton(
+                    icon: const Icon(
                       Icons.camera_enhance,
-                      size: 40,
+                      size: 20,
                     ),
                     onPressed: () async {
                       final value = await service.pickImages();
                       if (value != null) {
+                        widget.onPicked(value);
                         widget.images = value;
                         setState(() {});
                       }
-                
-                    },)
-                  
-              ));
+                    },
+                  ),
+                             ),
+               )
+
+                  ]
+                ),
+              )
+            : Center(
+                child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.camera_enhance,
+                    size: 60,
+                  ),
+                  onPressed: () async {
+                    final value = await service.pickImages();
+                    if (value != null) {
+                      widget.onPicked(value);
+                      widget.images = value;
+                      setState(() {});
+                    }
+                  },
+                ),
+              )));
+  }
+}
+
+class ImageCard extends StatelessWidget {
+  const ImageCard(
+    this.file, {
+    super.key,
+    required this.delete,
+  });
+
+  final XFile file;
+  final void Function(XFile) delete;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 120,  
+      width: double.infinity,
+        child: Stack(
+          children: [
+            Image.file(
+              File(file.path),
+              height: 120,
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
+            Positioned(
+              top:4,
+              right: 4,
+              child: InkWell(
+                  onTap: () => delete(file),
+                  child: const Icon(Icons.delete, 
+                  color: Color.fromARGB(255, 229, 57, 5))),
+            ),
+          ],
+        ));
   }
 }
