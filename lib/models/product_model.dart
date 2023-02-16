@@ -5,7 +5,7 @@ class Product {
     required this.title,
     this.titleDescription,
     required this.descriptions,
-    this.price,
+    required this.price,
     this.whatsapp,
     required this.phone,
     this.images,
@@ -18,9 +18,9 @@ class Product {
   final String title;
   final String? titleDescription; //atalush
   final String descriptions;
-  final String? price;//baasy
   final String? whatsapp;
   final String phone;
+  final String price;//baasy
   final List<dynamic>? images;
   final String? data;
   final String userName;
@@ -31,10 +31,12 @@ class Product {
 
   Map<String, dynamic> toMap() {
     return   <String, dynamic>{
+      
       'title': title,
       'titleDescription': titleDescription,
       'descriptions': descriptions,
       'whatsapp': whatsapp,
+      'price': price,
       'phone': phone,
       'photos': images,
       'data': data,
@@ -46,11 +48,12 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      images: List<dynamic>.from(map['photos']),
+      images:map['images'] != null ? List<String>.from((map['images'] as List<dynamic>)) : null,
       title: map['title'] ?? '',
       titleDescription: map['titleDescription'],
       descriptions: map['descriptions'] ?? '',
       whatsapp: map['whatsapp'],
+      price: map['price'] ?? '',
       phone: map['phone'] ?? '',
       data: map['data'],
       userName: map['userName'] ?? '',

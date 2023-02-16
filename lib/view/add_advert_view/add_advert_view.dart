@@ -1,10 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kazarman_jarnama/models/product_model.dart';
 import 'package:kazarman_jarnama/services/image_picer_service.dart';
+import 'package:kazarman_jarnama/services/loading_service.dart';
+import 'package:kazarman_jarnama/services/store_service.dart';
 
-import '../main_view.dart';
+import '../../constants/text_form_field.dart';
+import '../../services/storege_service.dart';
 
 class AdvertAddView extends StatefulWidget {
   const AdvertAddView({super.key});
@@ -20,6 +26,7 @@ class _AdvertAddViewState extends State<AdvertAddView> {
   final _phone = TextEditingController();
   final _userName = TextEditingController();
   final _address = TextEditingController();
+  final _price = TextEditingController();
   List<XFile> images = [];
 
   @override
@@ -36,7 +43,7 @@ class _AdvertAddViewState extends State<AdvertAddView> {
               onPicked: (value) => images = value,
               delete: (xfile) => images.remove(xfile),
             ),
-             const SizedBox(height: 12),
+            const SizedBox(height: 12),
             TexttformField(
               controller: _title,
               hintText: 'title',
@@ -51,6 +58,11 @@ class _AdvertAddViewState extends State<AdvertAddView> {
               maxLines: 6,
               controller: _descriptions,
               hintText: 'descriptions',
+            ),
+            const SizedBox(height: 12),
+            TexttformField(
+              controller: _price,
+              hintText: 'phone',
             ),
             const SizedBox(height: 12),
             TexttformField(
@@ -69,7 +81,22 @@ class _AdvertAddViewState extends State<AdvertAddView> {
             ),
             const SizedBox(height: 12),
             ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  LoadingService().showLoading(context);
+                  final url = await StoregeService().uploadImages(images);
+                  final product = Product(
+                    title: _title.text,
+                    descriptions: _descriptions.text,
+                    phone: _phone.text,
+                    userName: _userName.text,
+                    images: url,
+                    price: _price.text,
+                  );
+                  await StoreService().saveProduct(product);
+                  //==========================>>>>>>>>>>>>>>>>>
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  //<<<<<<<<<<<<<<<<<<<<<==========================
+                },
                 icon: const Icon(Icons.publish),
                 label: const Text('Add to firebase'))
           ],
@@ -107,50 +134,46 @@ class _ImageContainerState extends State<ImageContainer> {
         child: widget.images.isNotEmpty
             ? SizedBox(
                 height: 300,
-                child: Stack(
-                  children:[
-                     GridView.builder(
-                      gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisExtent: 120,   
-                              ),
-                      itemCount:widget.images.length,
-                      itemBuilder:(BuildContext context, int index) {
+                child: Stack(children: [
+                  GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisExtent: 120,
+                      ),
+                      itemCount: widget.images.length,
+                      itemBuilder: (BuildContext context, int index) {
                         return ImageCard(
                           widget.images[index],
                           delete: (xfile) {
                             widget.images.remove(xfile);
                             widget.delete(xfile);
-                            setState(() {
-                              
-                            });
+                            setState(() {});
                           },
                         );
                       }),
-               Positioned(
-                bottom: 4,
-                right: 4,
-                 child: Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.camera_enhance,
-                      size: 20,
+                  Positioned(
+                    bottom: 4,
+                    right: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(50.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.camera_enhance,
+                          size: 20,
+                        ),
+                        onPressed: () async {
+                          final value = await service.pickImages();
+                          if (value != null) {
+                            widget.onPicked(value);
+                            widget.images = value;
+                            setState(() {});
+                          }
+                        },
+                      ),
                     ),
-                    onPressed: () async {
-                      final value = await service.pickImages();
-                      if (value != null) {
-                        widget.onPicked(value);
-                        widget.images = value;
-                        setState(() {});
-                      }
-                    },
-                  ),
-                             ),
-               )
-
-                  ]
-                ),
+                  )
+                ]),
               )
             : Center(
                 child: Padding(
@@ -186,8 +209,8 @@ class ImageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 120,  
-      width: double.infinity,
+        height: 120,
+        width: double.infinity,
         child: Stack(
           children: [
             Image.file(
@@ -197,12 +220,12 @@ class ImageCard extends StatelessWidget {
               fit: BoxFit.fill,
             ),
             Positioned(
-              top:4,
+              top: 4,
               right: 4,
               child: InkWell(
                   onTap: () => delete(file),
-                  child: const Icon(Icons.delete, 
-                  color: Color.fromARGB(255, 229, 57, 5))),
+                  child: const Icon(Icons.delete,
+                      color: Color.fromARGB(255, 229, 57, 5))),
             ),
           ],
         ));
